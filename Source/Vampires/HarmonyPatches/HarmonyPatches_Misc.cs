@@ -378,7 +378,7 @@ namespace Vampire
         }
 
         // Exit early is pawn is a vampire and we're checking Breathing.
-        public static bool VampiresDontNeedLungs(PawnCapacitiesHandler __instance, PawnCapacityDef capacity, ref bool __result, Pawn ___pawn)
+        public static bool VampiresDontNeedLungs(PawnCapacityDef capacity, ref bool __result, Pawn ___pawn)
         {
             if (capacity == PawnCapacityDefOf.Breathing && ___pawn.IsVampire())
             {

@@ -42,7 +42,7 @@ namespace Vampire
             {
                 if (pawn.MapHeld is Map map && pawn.PositionHeld is IntVec3 pos && pos.IsValid && 
                     !pos.Roofed(map) && VampireUtility.IsForcedDarknessConditionInactive(map) &&
-                    pawn.VampComp()?.Generation > VampireUtility.GETLowestGenerationForOriginVampires)
+                    pawn.VampComp()?.Generation > VampireUtility.GETHighestGenerationForOriginVampires)
                 {
                     var returnJob = false;
                     // if legendary vampire (generation lower than 6) then only initiate seek shelter from sunlight if severity of sun burn is high enough

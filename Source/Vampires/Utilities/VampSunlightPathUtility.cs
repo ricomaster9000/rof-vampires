@@ -380,7 +380,7 @@ namespace Vampire
                     cellsInSunlight++;
             }
             path.Dispose();
-            if (cellsInSunlight > 0 && pawn.VampComp().Generation > VampireUtility.GETLowestGenerationForOriginVampires)
+            if (cellsInSunlight > 0 && pawn.VampComp().Generation > VampireUtility.GETHighestGenerationForOriginVampires)
             {
                 int sunExpTicks = 0;
                 if (pawn?.health?.hediffSet?.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure) is HediffWithComps_SunlightExposure sunExp)

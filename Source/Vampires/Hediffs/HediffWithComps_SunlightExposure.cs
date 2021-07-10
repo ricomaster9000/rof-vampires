@@ -67,13 +67,11 @@ namespace Vampire
                     if(pawn.VampComp().Generation == VampireUtility.GETThirdGenerationLevelForVampires)
                         Severity += 0.001f;
                     else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForLegendaryVampires)
-                        Severity += 0.002f;
+                        Severity += 0.003f;
                     else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForGreaterVampires)
-                        Severity += 0.006f;
+                        Severity += 0.007f;
                     else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForAverageVampires)
-                        Severity += 0.010f;
-                    else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForAverageVampires)
-                        Severity += 0.015f;
+                        Severity += 0.014f;
                     else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForLesserVampires)
                         Severity += 0.020f;
                 }

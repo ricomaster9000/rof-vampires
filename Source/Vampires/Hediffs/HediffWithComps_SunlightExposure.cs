@@ -63,7 +63,7 @@ namespace Vampire
                     {
                         Burn();
                     }
-                    Severity += 0.008f;
+                    Severity += 0.017f;
                 }
                 else
                 {

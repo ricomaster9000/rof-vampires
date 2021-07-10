@@ -39,7 +39,7 @@ namespace Vampire
             });
             AddEndCondition(delegate
             {
-                if (!CompFeeder.BloodPool.IsFull)
+                if (!CompFeeder.BloodPool.IsReallyFull)
                 {
                     return JobCondition.Ongoing;
                 }
@@ -162,7 +162,7 @@ namespace Vampire
             {
                 return false;
             }
-            if (feeder?.BloodNeed()?.IsFull ?? false)
+            if (feeder?.BloodNeed()?.IsReallyFull ?? false)
             {
                 return false;
             }

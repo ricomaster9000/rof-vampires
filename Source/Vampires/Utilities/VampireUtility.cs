@@ -9,9 +9,12 @@ namespace Vampire
 {
     public static partial class VampireUtility
     {
-
-
-
+        public static int GETLowestGenerationForOriginVampires => 2;
+        public static int GETThirdGenerationLevelForVampires => 3;
+        public static int GETHighestGenerationForLegendaryVampires => 6;
+        public static int GETHighestGenerationForGreaterVampires => 9;
+        public static int GETHighestGenerationForAverageVampires => 11;
+        public static int GETHighestGenerationForLesserVampires => 13;
         public static Faction RandVampFaction => Find.FactionManager.AllFactions
             .Where(x => x.def == VampDefOf.ROMV_Camarilla ||
                         x.def == VampDefOf.ROMV_Anarch ||

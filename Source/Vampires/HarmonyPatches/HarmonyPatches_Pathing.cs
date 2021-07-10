@@ -55,15 +55,36 @@ namespace Vampire
         // Verse.ReachabilityUtility
         public static void CanReach_Vampire(ref bool __result, Pawn pawn, LocalTargetInfo dest, PathEndMode peMode, Danger maxDanger, bool canBash = false, TraverseMode mode = TraverseMode.ByPawn)
         {
-            var inBeastMentalState = pawn?.MentalStateDef == DefDatabase<MentalStateDef>.GetNamed("ROMV_VampireBeast");
-            var inRestrictedSunlightAIMode = pawn?.VampComp()?.CurrentSunlightPolicy == SunlightPolicy.Restricted;
-            var isDaylight = VampireUtility.IsDaylight(pawn);
-            var isPlayerCharacter = pawn?.Faction == Faction.OfPlayerSilentFail;
-            var isNotDrafted = !pawn?.Drafted ?? false;
-            var destIsNotRoofed = !dest.Cell.Roofed(pawn?.MapHeld ?? Find.CurrentMap);
-            if (__result && pawn.IsVampire() &&
-                (inRestrictedSunlightAIMode || inBeastMentalState) &&
-                isDaylight && isPlayerCharacter && isNotDrafted && destIsNotRoofed) __result = false;
+            if (pawn != null)
+            {
+                var inBeastMentalState = pawn.MentalStateDef == DefDatabase<MentalStateDef>.GetNamed("ROMV_VampireBeast");
+                var inRestrictedSunlightAIMode = pawn.VampComp()?.CurrentSunlightPolicy == SunlightPolicy.Restricted;
+                var isDaylight = VampireUtility.IsDaylight(pawn);
+                var isPlayerCharacter = pawn.Faction == Faction.OfPlayerSilentFail;
+                var isNotDrafted = !pawn.Drafted;
+                var destIsNotRoofed = !dest.Cell.Roofed(pawn.MapHeld ?? Find.CurrentMap);
+                var isLegendaryVampireSafe = pawn.IsVampire() && !inBeastMentalState &&
+                                             pawn.VampComp()?.Generation <= VampireUtility.GETHighestGenerationForLegendaryVampires &&
+                                             ((pawn.health?.hediffSet?.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure)
+                                                  is HediffWithComps_SunlightExposure sunExp && sunExp.Severity < 50) ||
+                                              (pawn.health == null || pawn.health.hediffSet == null ||
+                                               pawn.health.hediffSet.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure) ==
+                                               null));
+                var isOriginVampireSafe = pawn.IsVampire() && !inBeastMentalState &&
+                                          pawn.VampComp().Generation <=
+                                          VampireUtility.GETLowestGenerationForOriginVampires;
+
+                if (isLegendaryVampireSafe || isOriginVampireSafe)
+                {
+                    __result = true;
+                }
+                else if (__result && pawn.IsVampire() &&
+                         (inRestrictedSunlightAIMode || inBeastMentalState) &&
+                         isDaylight && isPlayerCharacter && isNotDrafted && destIsNotRoofed)
+                {
+                    __result = false;
+                }
+            }
         }
 
         //JobGiver_GetRest 

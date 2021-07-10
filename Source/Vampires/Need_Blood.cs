@@ -45,8 +45,9 @@ namespace Vampire
         #region Properties
         public CompVampire CompVampire => pawn?.TryGetComp<CompVampire>();
         public bool IsAnimal => pawn?.RaceProps?.Animal ?? false;
-        public bool IsFull => CurBloodPoints == MaxBloodPoints;
-        public bool Starving => CompVampire != null && CompVampire.IsVampire && CurCategory == HungerCategory.Starving;
+        public bool IsFull => CurBloodPoints > (MaxBloodPoints * 0.75);
+        public bool IsReallyFull => CurBloodPoints > (MaxBloodPoints * 0.999);
+        public bool Starving => CompVampire != null && CompVampire.IsVampire && CurCategory == HungerCategory.Starving && CurBloodPoints < (MaxBloodPoints * 0.25);
         public bool ShouldDie => CurBloodPoints == 0;
         public float PercPerPoint => 1f / MaxBloodPoints;
 
@@ -103,11 +104,11 @@ namespace Vampire
         public int MaxBloodPointsForAnimal(Pawn p)
         {
             PawnKindDef def = p.kindDef;
-            int result = def.RaceProps.baseBodySize < 1f ? 1 : 2;
-            if (def == PawnKindDef.Named("Rat")) return 1;
+            int result = def.RaceProps.baseBodySize < 1f ? 2 : 4;
+            if (def == PawnKindDef.Named("Rat")) return 2;
             if (def == PawnKindDefOf.Thrumbo) return 10;
             if (def?.RaceProps?.trainability == TrainabilityDefOf.Advanced)
-                result += 1;
+                result += 2;
             return result;
         }
 

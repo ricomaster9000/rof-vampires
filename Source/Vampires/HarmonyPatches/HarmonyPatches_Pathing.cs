@@ -72,7 +72,7 @@ namespace Vampire
                                                null));
                 var isOriginVampireSafe = pawn.IsVampire() && !inBeastMentalState &&
                                           pawn.VampComp().Generation <=
-                                          VampireUtility.GETLowestGenerationForOriginVampires;
+                                          VampireUtility.GETHighestGenerationForOriginVampires;
 
                 if (isLegendaryVampireSafe || isOriginVampireSafe)
                 {

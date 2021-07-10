@@ -9,7 +9,7 @@ namespace Vampire
 {
     public static partial class VampireUtility
     {
-        public static int GETLowestGenerationForOriginVampires => 2;
+        public static int GETHighestGenerationForOriginVampires => 2;
         public static int GETThirdGenerationLevelForVampires => 3;
         public static int GETHighestGenerationForLegendaryVampires => 6;
         public static int GETHighestGenerationForGreaterVampires => 9;

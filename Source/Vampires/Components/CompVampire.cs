@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using RimWorld;
 using Verse;
 using AbilityUser;
+using Mono.Math;
 using Verse.AI;
 
 namespace Vampire
@@ -488,12 +489,11 @@ namespace Vampire
             if (this?.AbilityUser?.playerSettings != null)
                 AbilityUser.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
 
-            //Prevents enemy vampires from spawning in with low vitae and hunting the players' characters.
-            //Legendary vampires, however, will spawn hungry.
-            if (this.Blood != null &&
-                this.AbilityUser.Faction != Faction.OfPlayerSilentFail &&
-                this.AbilityUser.Faction != Find.FactionManager.FirstFactionOfDef(VampDefOf.ROMV_LegendaryVampires))
+            //All Vampires spawned now start with some blood points, legendary vampires still start hungry though
+            if (this.Blood != null && this.AbilityUser.Faction != Find.FactionManager.FirstFactionOfDef(VampDefOf.ROMV_LegendaryVampires))
                 this.Blood.CurBloodPoints = this.Blood.MaxBloodPoints;
+            else if (this.Blood != null && this.AbilityUser.Faction == Find.FactionManager.FirstFactionOfDef(VampDefOf.ROMV_LegendaryVampires))
+                this.Blood.CurBloodPoints = Convert.ToInt32(this.Blood.MaxBloodPoints * 0.5);
 
 
             Find.World.GetComponent<WorldComponent_VampireTracker>().AddVampire(AbilityUser, newSire, bloodline, generation, AbilityUser.ageTracker.AgeBiologicalYearsFloat);

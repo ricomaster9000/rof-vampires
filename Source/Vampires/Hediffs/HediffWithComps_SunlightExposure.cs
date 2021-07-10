@@ -63,7 +63,19 @@ namespace Vampire
                     {
                         Burn();
                     }
-                    Severity += 0.008f;
+
+                    if(pawn.VampComp().Generation == VampireUtility.GETThirdGenerationLevelForVampires)
+                        Severity += 0.001f;
+                    else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForLegendaryVampires)
+                        Severity += 0.002f;
+                    else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForGreaterVampires)
+                        Severity += 0.006f;
+                    else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForAverageVampires)
+                        Severity += 0.010f;
+                    else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForAverageVampires)
+                        Severity += 0.015f;
+                    else if(pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForLesserVampires)
+                        Severity += 0.020f;
                 }
                 else
                 {

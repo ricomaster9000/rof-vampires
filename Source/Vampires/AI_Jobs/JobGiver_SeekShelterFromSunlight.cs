@@ -42,19 +42,10 @@ namespace Vampire
             {
                 if (pawn.MapHeld is Map map && pawn.PositionHeld is IntVec3 pos && pos.IsValid && 
                     !pos.Roofed(map) && VampireUtility.IsForcedDarknessConditionInactive(map) &&
-                    pawn.VampComp()?.Generation > VampireUtility.GETHighestGenerationForOriginVampires)
+                    pawn.VampComp()?.Generation > VampireUtility.GETHighestGenerationForOriginVampires &&
+                    VampSunlightPathUtility.GetSunlightPathJob(pawn) is Job j)
                 {
-                    var returnJob = false;
-                    // if legendary vampire (generation lower than 6) then only initiate seek shelter from sunlight if severity of sun burn is high enough
-                    if (pawn.VampComp()?.Generation <= VampireUtility.GETHighestGenerationForLegendaryVampires &&
-                        pawn?.health?.hediffSet?.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure) is HediffWithComps_SunlightExposure sunExp &&
-                        sunExp.Severity > 50)
-                        returnJob = true;
-                    else if (pawn.VampComp()?.Generation > VampireUtility.GETHighestGenerationForLegendaryVampires)
-                        returnJob = true;
-
-                    if (returnJob && VampSunlightPathUtility.GetSunlightPathJob(pawn) is Job j)
-                        return j;
+                    return j;
                 }
             }
             catch (Exception e)

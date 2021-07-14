@@ -168,7 +168,7 @@ namespace Vampire
         public static void Vamp_SleepyDuringDaylight(Need_Rest __instance)
         {
             Pawn pawn = (Pawn)AccessTools.Field(typeof(Need_Rest), "pawn").GetValue(__instance);
-            if (pawn != null && pawn.IsVampire())
+            if (pawn != null && pawn.IsVampire() && pawn.VampComp().Generation > VampireUtility.GETHighestGenerationForOriginVampires)
             {
                 if (VampireUtility.IsDaylight(pawn))
                 {

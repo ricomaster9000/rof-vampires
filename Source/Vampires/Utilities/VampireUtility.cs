@@ -254,6 +254,24 @@ namespace Vampire
             }
         }
 
+        public static bool Vampire_Can_Operate_In_Day(Pawn pawn)
+        {
+            if (pawn != null)
+            {
+                var inBeastMentalState = pawn.MentalStateDef == DefDatabase<MentalStateDef>.GetNamed("ROMV_VampireBeast");
+                var isLegendaryVampireSafe = pawn.IsVampire() && !inBeastMentalState &&
+                                             pawn.VampComp()?.Generation <= GETHighestGenerationForLegendaryVampires &&
+                                             ((pawn.health?.hediffSet?.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure) is HediffWithComps_SunlightExposure sunExp && sunExp.Severity < 50) ||
+                                              (pawn.health == null || pawn.health.hediffSet == null || pawn.health.hediffSet.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure) == null));
+                var isOriginVampireSafe = pawn.IsVampire() && !inBeastMentalState && pawn.VampComp().Generation <= GETHighestGenerationForOriginVampires;
+                return (isLegendaryVampireSafe || isOriginVampireSafe);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
   
         /// <summary>
         /// Returns grappler modifier for vampires

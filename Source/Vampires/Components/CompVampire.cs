@@ -494,6 +494,7 @@ namespace Vampire
                 this.Blood.CurBloodPoints = this.Blood.MaxBloodPoints;
             else if (this.Blood != null && this.AbilityUser.Faction == Find.FactionManager.FirstFactionOfDef(VampDefOf.ROMV_LegendaryVampires))
                 this.Blood.CurBloodPoints = Convert.ToInt32(this.Blood.MaxBloodPoints * 0.5);
+                this.curSunlightPolicy = SunlightPolicy.Relaxed;
 
 
             Find.World.GetComponent<WorldComponent_VampireTracker>().AddVampire(AbilityUser, newSire, bloodline, generation, AbilityUser.ageTracker.AgeBiologicalYearsFloat);

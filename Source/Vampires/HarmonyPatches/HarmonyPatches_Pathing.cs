@@ -55,7 +55,7 @@ namespace Vampire
         // Verse.ReachabilityUtility
         public static void CanReach_Vampire(ref bool __result, Pawn pawn, LocalTargetInfo dest, PathEndMode peMode, Danger maxDanger, bool canBash = false, TraverseMode mode = TraverseMode.ByPawn)
         {
-            if (pawn != null)
+            if (__result && pawn != null && pawn.IsVampire())
             {
                 var inBeastMentalState = pawn.MentalStateDef == DefDatabase<MentalStateDef>.GetNamed("ROMV_VampireBeast");
                 var inRestrictedSunlightAIMode = pawn.VampComp()?.CurrentSunlightPolicy == SunlightPolicy.Restricted;
@@ -63,22 +63,11 @@ namespace Vampire
                 var isPlayerCharacter = pawn.Faction == Faction.OfPlayerSilentFail;
                 var isNotDrafted = !pawn.Drafted;
                 var destIsNotRoofed = !dest.Cell.Roofed(pawn.MapHeld ?? Find.CurrentMap);
-                var isLegendaryVampireSafe = pawn.IsVampire() && !inBeastMentalState &&
-                                             pawn.VampComp()?.Generation <= VampireUtility.GETHighestGenerationForLegendaryVampires &&
-                                             ((pawn.health?.hediffSet?.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure)
-                                                  is HediffWithComps_SunlightExposure sunExp && sunExp.Severity < 50) ||
-                                              (pawn.health == null || pawn.health.hediffSet == null ||
-                                               pawn.health.hediffSet.GetFirstHediffOfDef(VampDefOf.ROMV_SunExposure) ==
-                                               null));
-                var isOriginVampireSafe = pawn.IsVampire() && !inBeastMentalState &&
-                                          pawn.VampComp().Generation <=
-                                          VampireUtility.GETHighestGenerationForOriginVampires;
-
-                if (isLegendaryVampireSafe || isOriginVampireSafe)
+                if (!inBeastMentalState && pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForOriginVampires)
                 {
                     __result = true;
                 }
-                else if (__result && pawn.IsVampire() &&
+                else if (pawn.IsVampire() &&
                          (inRestrictedSunlightAIMode || inBeastMentalState) &&
                          isDaylight && isPlayerCharacter && isNotDrafted && destIsNotRoofed)
                 {

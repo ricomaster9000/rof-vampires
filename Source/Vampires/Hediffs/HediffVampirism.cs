@@ -207,5 +207,26 @@ namespace Vampire
             //Scribe_Collections.Look<Hediff, int>(ref this.carriedBloodInfectors, "carriedBloodInfectors", LookMode.Deep, LookMode.Value);
             //Scribe_Collections.Look<Hediff, int>(ref this.carriedBloodDrugEffects, "carriedBloodDrugEffects", LookMode.Deep, LookMode.Value);
         }
+
+        public override void Notify_PawnDied()
+        {
+            if(pawn != null && pawn.Dead && pawn.IsVampire() && pawn.Dead && pawn.VampComp().getIsBeingDiablerieOn() && BloodUtility.wasDiablerieBeingAttemptedOnSuccessful(pawn))
+            {
+                Pawn killer = Find.World.GetComponent<WorldComponent_VampireTracker>().GetVampire(pawn.VampComp().getWhoIsDoingDiablerieId());
+                if (pawn.VampComp().Generation < killer.VampComp().Generation)
+                {
+                    killer.VampComp().reInitializeVampirismOnVampire(killer.VampComp().Generation - 1);
+                    killer.VampComp().setWhoAmIDoingDiablerieOnId(null);
+                    pawn.VampComp().setIsBeingDiablerieOn(false);
+                    pawn.VampComp().setWhoIsDoingDiablerieId(null);
+                    Find.LetterStack.ReceiveLetter("ROMV_SuccessfulDiablerie".Translate(killer.Named("PAWN")), "ROMV_VampireDiablerieSuccessfulLetter".Translate(killer.Named("PAWN"), pawn.Named("VICTIM")), LetterDefOf.ThreatSmall, killer);
+                }
+                pawn.Destroy(DestroyMode.KillFinalize);
+                if (pawn.Corpse?.GetComp<CompRottable>() is CompRottable r)
+                {
+                    r.RotProgress = 999999999f;
+                }
+            }
+        }
     }
 }

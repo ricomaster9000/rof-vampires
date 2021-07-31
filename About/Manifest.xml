@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Manifest>
   <identifier>RimOfMadness-Vampires</identifier>
-  <version>1.22.0.1</version>
+  <version>1.3.0.0</version>
   <dependencies>
     <li>jecrell.jecstools</li>
   </dependencies>
@@ -10,5 +10,5 @@
     <li>Dubwise.DubsBadHygiene</li>
   </loadAfter>
   <manifestUri>https://raw.githubusercontent.com/ZeroKato/rof-vampires/master/About/Manifest.xml</manifestUri>
-  <downloadUri>https://github.com/ZeroKato/rof-vampires/releases/latest</downloadUri>
+  <downloadUri></downloadUri>
 </Manifest>

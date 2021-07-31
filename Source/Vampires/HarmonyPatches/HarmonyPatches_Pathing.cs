@@ -15,6 +15,7 @@ namespace Vampire
     {
         public static void HarmonyPatches_Pathing(Harmony harmony)
         {
+            Log.Message("working5.1");
             // PATHING
             //////////////////////////////////////////////////////////////////////////////
             //The wander handler now makes vampires wander indoors (for their safety).
@@ -22,38 +23,41 @@ namespace Vampire
             //                new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_DontWanderStupid)));            
             harmony.Patch(AccessTools.Method(typeof(PawnUtility), "KnownDangerAt"), null,
             new HarmonyMethod(typeof(HarmonyPatches), nameof(KnownDangerAt_Vamp)));
-            //Log.Message("07");
+            Log.Message("working5.2");
             harmony.Patch(
                 AccessTools.Method(typeof(JoyUtility), "EnjoyableOutsideNow",
                     new Type[] { typeof(Pawn), typeof(StringBuilder) }), null,
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(EnjoyableOutsideNow_Vampire)));
-            //Log.Message("08");
+            Log.Message("working5.3");
             harmony.Patch(AccessTools.Method(typeof(JobGiver_GetRest), "FindGroundSleepSpotFor"), null,
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(FindGroundSleepSpotFor_Vampire)));
             //Log.Message("09");
+            Log.Message("working5.4");
             harmony.Patch(AccessTools.Method(typeof(JobGiver_TakeCombatEnhancingDrug), "TryGiveJob"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(TryGiveJob_DrugGiver_Vampire)), null);
-            //Log.Message("10");
+            Log.Message("working5.5");
+
             harmony.Patch(
                 AccessTools.Method(typeof(ReachabilityUtility), "CanReach",
-                    new Type[]
-                    {
+                    new Type[] {
                         typeof(Pawn), typeof(LocalTargetInfo), typeof(PathEndMode), typeof(Danger), typeof(bool),
-                        typeof(TraverseMode)
-                    }), null,
-                new HarmonyMethod(typeof(HarmonyPatches), nameof(CanReach_Vampire)));
-            //Log.Message("11");
+                        typeof(bool), typeof(TraverseMode)
+                    }),
+                null,
+                new HarmonyMethod(typeof(HarmonyPatches), nameof(CanReach_Vampire))
+            );
+
+            Log.Message("working5.6");
             harmony.Patch(
                 AccessTools.Method(typeof(ForbidUtility), "IsForbidden", new Type[] { typeof(IntVec3), typeof(Pawn) }),
                 null,
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_IsForbidden)));
-            ////Log.Message("12");
-
+            Log.Message("working5.7");
         }
 
 
         // Verse.ReachabilityUtility
-        public static void CanReach_Vampire(ref bool __result, Pawn pawn, LocalTargetInfo dest, PathEndMode peMode, Danger maxDanger, bool canBash = false, TraverseMode mode = TraverseMode.ByPawn)
+        public static void CanReach_Vampire(Pawn pawn, LocalTargetInfo dest, PathEndMode peMode, Danger maxDanger, ref bool __result, bool canBashDoors = false, bool canBashFences = false, TraverseMode mode = TraverseMode.ByPawn)
         {
             if (__result && pawn != null && pawn.IsVampire())
             {
@@ -63,7 +67,7 @@ namespace Vampire
                 var isPlayerCharacter = pawn.Faction == Faction.OfPlayerSilentFail;
                 var isNotDrafted = !pawn.Drafted;
                 var destIsNotRoofed = !dest.Cell.Roofed(pawn.MapHeld ?? Find.CurrentMap);
-                if (!inBeastMentalState && pawn.VampComp().Generation <= VampireUtility.GETHighestGenerationForOriginVampires)
+                if (!inBeastMentalState && pawn.VampComp()?.Generation <= VampireUtility.GETHighestGenerationForOriginVampires)
                 {
                     __result = true;
                 }
@@ -92,9 +96,8 @@ namespace Vampire
                         return;
                     }
                 }
-                __result = CellFinder.RandomClosewalkCellNearNotForbidden(pawn.Position, map, 4, pawn);
+                __result = CellFinder.RandomClosewalkCellNearNotForbidden(pawn, 4);
                 return;
-                //return CellFinder.RandomClosewalkCellNearNotForbidden(pawn.Position, map, 4, pawn);
             }
         }
 

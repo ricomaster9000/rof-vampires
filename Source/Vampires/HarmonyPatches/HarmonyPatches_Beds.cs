@@ -19,35 +19,36 @@ namespace Vampire
             // BEDS
             ///////////////////////////////////////////////////////////////////////////
             //Add overrides to methods if CompVampBed is active.
-            harmony.Patch(AccessTools.Method(typeof(Building), "Draw"),
+            Log.Message("working8.1");
+            harmony.Patch(AccessTools.Method(typeof(ThingWithComps), "Draw"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Draw_VampBed)), null);
-            //Log.Message("13");
+            Log.Message("working8.2");
             harmony.Patch(AccessTools.Method(typeof(Building_Casket), "Accepts"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Accepts_VampBed)), null);
-            //Log.Message("14");
+            Log.Message("working8.3");
             harmony.Patch(AccessTools.Method(typeof(Building_Grave), "get_Graphic"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(get_Graphic_VampBed)), null);
-            //Log.Message("15");
+            Log.Message("working8.4");
             harmony.Patch(AccessTools.Method(typeof(ThingWithComps), "GetFloatMenuOptions"), null,
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(GetFloatMenuOptions_VampBed)));
-            //Log.Message("16");
             //Removed            harmony.Patch(AccessTools.Method(typeof(WorkGiver_BuryCorpses), "FindBestGrave"), null,
             //in 1.0                new HarmonyMethod(typeof(HarmonyPatches), nameof(FindBestGrave_VampBed)));
             //Adds comfort to vampire beds.
+            Log.Message("working8.5");
             harmony.Patch(AccessTools.Method(typeof(PawnUtility), "GainComfortFromCellIfPossible"), null,
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_BedComfort)));
-            //Log.Message("17");
+            Log.Message("working8.6");
             //Caskets and coffins do not autoassign to colonists.
             harmony.Patch(AccessTools.Method(typeof(Pawn_Ownership), "ClaimBedIfNonMedical"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_BedsForTheUndead)), null);
-            //Log.Message("18");
+            Log.Message("working8.7");
             harmony.Patch(AccessTools.Method(typeof(RestUtility), "IsValidBedFor"), null,
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_IsValidBedFor)));
-            //Log.Message("19");
+            Log.Message("working8.8");
         }
 
 
-        public static bool Draw_VampBed(Building __instance)
+        public static void Draw_VampBed(Building __instance)
         {
             if (__instance is Building_Casket casket)
             {
@@ -55,10 +56,8 @@ namespace Vampire
                 {
                     if (!casket.Spawned || casket.GetDirectlyHeldThings()?.Count == 0)
                         casket.Draw();
-                    return false;
                 }
             }
-            return true;
         }
 
 
@@ -168,9 +167,9 @@ namespace Vampire
 
 
         //RestUtility
-        public static void Vamp_IsValidBedFor(Thing bedThing, Pawn sleeper, Pawn traveler,
-            bool sleeperWillBePrisoner, bool checkSocialProperness, bool allowMedBedEvenIfSetToNoCare,
-            bool ignoreOtherReservations, ref bool __result)
+        public static void Vamp_IsValidBedFor(ref bool __result, Thing bedThing, Pawn sleeper, Pawn traveler,
+            bool checkSocialProperness, bool allowMedBedEvenIfSetToNoCare = false, bool ignoreOtherReservations = false,
+            GuestStatus? guestStatus = null)
         {
             if (sleeper != null && !sleeper.IsVampire() && bedThing.IsVampireBed())
             {

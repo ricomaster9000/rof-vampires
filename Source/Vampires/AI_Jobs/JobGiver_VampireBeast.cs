@@ -32,9 +32,9 @@ namespace Vampire
             Pawn pawn2 = FindPawnTarget(pawn);
             if (pawn2 != null && pawn.CanReach(pawn2, PathEndMode.Touch, Danger.Deadly))
             {
-                if (pawn2.InAggroMentalState)
-                    return MeleeAttackJob(pawn2);
-                else
+                //if (pawn2.InAggroMentalState)
+                    //return MeleeAttackJob(pawn2);
+                //else
                     return FeedJob(pawn2);
             }
 
@@ -61,7 +61,7 @@ namespace Vampire
                         return MeleeAttackJob(thing);
                         //}
                     }
-                    IntVec3 loc = pawnPath.LastCellBeforeBlockerOrFinalCell(pawn.MapHeld);
+                    IntVec3 loc = pawnPath.Peek(0);
                     IntVec3 randomCell = CellFinder.RandomRegionNear(loc.GetRegion(pawn.Map), 9, TraverseParms.For(pawn)).RandomCell;
                     if (randomCell == pawn.PositionHeld)
                     {

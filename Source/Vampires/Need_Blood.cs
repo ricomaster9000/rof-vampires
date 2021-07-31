@@ -421,7 +421,7 @@ namespace Vampire
 
         }
 
-        public override void DrawOnGUI(Rect rect, int maxThresholdMarkers = Int32.MaxValue, float customMargin = -1f, bool drawArrows = true, bool doTooltip = true)
+        public override void DrawOnGUI(Rect rect, int maxThresholdMarkers = Int32.MaxValue, float customMargin = -1f, bool drawArrows = true, bool doTooltip = true, Rect? rectForTooltip = null)
         {
             if (threshPercents == null)
             {

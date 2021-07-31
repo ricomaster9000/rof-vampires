@@ -127,9 +127,10 @@ namespace Vampire
         }
 
 
-        public static void BestAttackTarget(IAttackTargetSearcher searcher, TargetScanFlags flags,
+        public static void BestAttackTarget(ref IAttackTarget __result, IAttackTargetSearcher searcher, TargetScanFlags flags,
             Predicate<Thing> validator, float minDist, float maxDist,
-            IntVec3 locus, float maxTravelRadiusFromLocus, bool canBash, ref IAttackTarget __result)
+            IntVec3 locus, float maxTravelRadiusFromLocus = 3.402823E+38f, bool canBashDoors = false,
+            bool canTakeTargetsCloserThanEffectiveMinRange = true, bool canBashFences = false)
         {
             if (searcher?.Thing is Pawn pSearch && __result?.Thing is Pawn p && p.IsVampire() &&
                 p.VampComp().Sheet.Disciplines.FirstOrDefault(x => x.Def.defName == "ROMV_Presence") is Discipline d)

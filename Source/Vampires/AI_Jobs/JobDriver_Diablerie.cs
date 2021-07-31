@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JetBrains.Annotations;
 using Verse;
 using Verse.AI;
 
@@ -44,12 +45,16 @@ namespace Vampire
             if (DiablerieInteractionGiven) return;
             DiablerieInteractionGiven = true;
             Find.LetterStack.ReceiveLetter("ROMV_AttemptedDiablerie".Translate(this.pawn.Named("PAWN")), "ROMV_VampireDiablerieAttemptedLetter".Translate(this.pawn.Named("PAWN"), Victim.Named("VICTIM")), LetterDefOf.ThreatSmall, pawn);
-            MoteMaker.MakeInteractionBubble(GetActor(), Victim, VampDefOf.ROMV_VampireDiablerieAttempt.interactionMote, VampDefOf.ROMV_VampireDiablerieAttempt.Symbol);
+            MoteMaker.MakeInteractionBubble(GetActor(), Victim, VampDefOf.ROMV_VampireDiablerieAttempt.interactionMote, VampDefOf.ROMV_VampireDiablerieAttempt.GetSymbol());
             if (this?.Victim?.needs?.mood?.thoughts?.memories is MemoryThoughtHandler m)
             {
                 m.TryGainMemory(VampDefOf.ROMV_VampireDiablerieAttempt.recipientThought, GetActor());
             }
             Find.PlayLog.Add(new PlayLogEntry_Interaction(VampDefOf.ROMV_VampireDiablerieAttempt, this.GetActor(), this.Victim, null));
+            CompVictim.setIsBeingDiablerieOn(true);
+            
+            CompFeeder.setWhoAmIDoingDiablerieOnId(CompVictim.Generation.ToString() + "_" + CompVictim.Bloodline.ToString() + "_" + CompVictim.Pawn.Name.ToStringFull + "_" + CompVictim.Pawn.gender.ToString());
+            CompVictim.setWhoIsDoingDiablerieId(CompFeeder.Generation.ToString() + "_" + CompFeeder.Bloodline.ToString() + "_" + CompFeeder.Pawn.Name.ToStringFull + "_" + CompFeeder.Pawn.gender.ToString());
         }
 
         public override string GetReport()

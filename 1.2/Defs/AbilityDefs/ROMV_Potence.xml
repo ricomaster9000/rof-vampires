@@ -272,10 +272,10 @@
 		<stunChance>0.2</stunChance>
 		<stunTicks>60</stunTicks>
 		<knockDistance>
-		  <min>2</min>
+		  <min>1</min>
 		  <max>3</max>
 		</knockDistance>
-		<explosiveKnockback>true</explosiveKnockback>
+		<explosiveKnockback>false</explosiveKnockback>
 		<explosionDmg>Stun</explosionDmg>
       </li>
       <li Class="JecsTools.HediffCompProperties_ExtraMeleeDamages">

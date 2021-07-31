@@ -8,34 +8,28 @@
     <li>1.0</li>
     <li>1.1</li>
     <li>1.2</li>
+    <li>1.3</li>
   </supportedVersions>
   <modDependencies>
+    <li>
+      <packageId>jecrell.jecstools</packageId>
+      <displayName>JecsTools</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=932008009</steamWorkshopUrl>
+      <downloadUrl>https://github.com/jecrell/JecsTools/releases/latest</downloadUrl>
+    </li>
     <li>
       <packageId>brrainz.harmony</packageId>
       <displayName>Harmony</displayName>
       <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
       <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
     </li>
-    <li>
-      <packageId>jecrell.jecstools</packageId>
-      <displayName>JecsTools</displayName>
-      <steamWorkshopUrl>steam://url/CommunityFilePage/932008009</steamWorkshopUrl>
-      <downloadUrl>https://patreon.com/jecrell</downloadUrl>
-    </li>
   </modDependencies>
   <loadAfter>
     <li>jecrell.jecstools</li>
     <li>Dubwise.DubsBadHygiene</li>
   </loadAfter>
-  <description>1.22.0.0 (09-25-2020)
-This is a rehost of Jecrells orginal Vampires mod. I have not touched much outside of updating this to 1.2 and fixing the most obvious bugs.
-In keeping in spirit with the original, I have added this as a new version, however.
-
-Because of the way package IDs work for Rimworld mods, anything depending on the original Vampires mod will show a missing dependency.
-The mods should still work though, as long as this is loaded BEFORE anything that depends on Vampires.
-
-Requires JecsTools(Unofficial) for 1.2 or newer: [url=steam://url/CommunityFilePage/2195729899]steam://url/CommunityFilePage/2195729899[/url]
-Technically the normal JecsTools should work too, though they have not been updated from 1.1.
+  <description>1.3.0.0 (07-25-2021)
+This is a rehost of Jecrells orginal Vampires mod. 
 
 The new GitHub repository: https://github.com/ZeroKato/rof-vampires
 The orginal repository by Jecrell: https://github.com/Rim-Of-Madness-Team/Rim-of-Madness---Vampires
@@ -45,18 +39,9 @@ For questions and such you can find me on the Rim of Madness Discord: https://di
 ========================
 Changelog
 ========================
-1.22.0.1 (09-27-2020)
+1.3.0.0 (07-25-2021)
 ========================
 Integrated Vampire meditation fix
-
-1.22.0.0 (09-25-2020)
-========================
-Rehost in new repository
-Updates repository to 1.2, updates Rimworld and Harmony dependencies and changes JecsTools dependency to instead rely on JecsTools(Unofficial) for 1.2 support.
-Fixes Royal Coffins throwing error when selected
-Fixes Roxal Coffins now showing gizmo buttons at the bottom
-
-
 
 =============================================================
 Original Description And Changelog By Jecrell:

@@ -9,6 +9,20 @@ namespace Vampire
 {
     public static class BloodUtility
     {
+        public static string Topic = "Static class";
+
+        public static bool wasDiablerieBeingAttemptedOnSuccessful(Pawn pawn)
+        {
+            bool result = false;
+            if (Find.World.GetComponent<WorldComponent_VampireTracker>().GetVampire(pawn.VampComp().getWhoIsDoingDiablerieId()) != null)
+            {
+                Pawn killer = Find.World.GetComponent<WorldComponent_VampireTracker>().GetVampire(pawn.VampComp().getWhoIsDoingDiablerieId());
+                result = killer.LastAttackedTarget.IsValid && killer.LastAttackedTarget.HasThing &&
+                         killer.LastAttackedTarget.Pawn.ThingID == pawn.ThingID &&
+                         killer.VampComp().getWhoAmIDoingDiablerieOnId() == pawn.VampComp().Generation.ToString() + "_" + pawn.VampComp().Bloodline.ToString() + "_" + pawn.VampComp().Pawn.Name.ToStringFull + "_" + pawn.VampComp().Pawn.gender.ToString();
+            }
+            return result;
+        }
 
         // RimWorld.FoodUtility
         public static bool TryFindBestBloodSourceFor(Pawn getter, Pawn eater, bool desperate, out Thing bloodSource, out ThingDef bloodDef, bool canUseInventory = true, bool allowForbidden = false)
@@ -210,7 +224,7 @@ namespace Vampire
                 if (predator == pawn2) continue;
                 if (!IsAcceptableVictimFor(predator, pawn2, desperate)) continue;
                 if (!predator.CanReach(pawn2, PathEndMode.Touch, Danger.Deadly)) continue;
-                if (tutorialMode && pawn2.Faction == Faction.OfPlayer) continue;
+                if (pawn2.Faction == Faction.OfPlayer && ((pawn2.training != null && pawn2.training.HasLearned(TrainableDefOf.Tameness)) || tutorialMode)) continue;
                 float preyScoreFor = GetPreyScoreFor(predator, pawn2);
                 if (!(preyScoreFor > num) && pawn != null) continue;
                 num = preyScoreFor;
@@ -312,11 +326,8 @@ namespace Vampire
                     if (victim.IsVampire())
                         return false;
 
-
                     if (!vampire.CanReserve(victim))
                         return false;
-
-
 
                     if (vampire.MentalStateDef == HediffWithComps_BeastHunger.MentalState_VampireBeast)
                         return true;

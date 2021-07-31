@@ -33,8 +33,9 @@ namespace Vampire
                     Find.World.HasCaves(x) && TileFinder.IsValidTileForNewSettlement(x, null);
                 bool preferCloserTiles2 = preferCloserTiles;
                 int result;
+
                 if (TileFinder.TryFindPassableTileWithTraversalDistance(root, minDist2, maxDist2, out result, validator,
-                    false, preferCloserTiles2))
+                    false, RimWorld.Planet.TileFinderMode.Near,false,true))
                 {
                     return result;
                 }

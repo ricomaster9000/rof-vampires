@@ -85,7 +85,7 @@ namespace Vampire
                 {
                     return new Job(VampDefOf.ROMV_Feed, pawn2)
                     {
-                        killIncappedTarget = isHuntLethal
+                        killIncappedTarget = blood.preferredFeedMode == PreferredFeedMode.AnimalLethal ? isHuntLethal && pawn2.RaceProps?.petness <= 0 : isHuntLethal
                     };
                 }
                 return new Job(VampDefOf.ROMV_ConsumeBlood, thing)

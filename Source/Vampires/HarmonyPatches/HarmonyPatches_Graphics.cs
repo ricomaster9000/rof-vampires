@@ -18,23 +18,24 @@ namespace Vampire
             // GRAPHICS
             ////////////////////////////////////////////////////////////////////////////
             //Gives different skin color for Vampires
+            Log.Message("10.1");
             harmony.Patch(AccessTools.Method(typeof(Pawn_StoryTracker), "get_SkinColor"),
                     new HarmonyMethod(typeof(HarmonyPatches), nameof(get_SkinColor_Vamp)), null);
-            //Log.Message("22");
+            Log.Message("10.2");
             //Changes vampire appearances and statistics based on their current forms
             harmony.Patch(AccessTools.Method(typeof(Pawn), "get_BodySize"), null, new HarmonyMethod(
                 typeof(HarmonyPatches), nameof(VampireBodySize)));
-            //Log.Message("23");
+            Log.Message("10.3");
             harmony.Patch(AccessTools.Method(typeof(Pawn), "get_HealthScale"), null, new HarmonyMethod(
                 typeof(HarmonyPatches), nameof(VampireHealthScale)));
-            //Log.Message("24");
+            Log.Message("10.4");
             harmony.Patch(AccessTools.Method(typeof(PawnGraphicSet), "ResolveAllGraphics"), null, new HarmonyMethod(
                 typeof(HarmonyPatches), nameof(Vamp_ResolveAllGraphics)));
-            //Log.Message("25");
+            Log.Message("10.5");
             harmony.Patch(AccessTools.Method(typeof(PawnGraphicSet), "ResolveApparelGraphics"), new HarmonyMethod(
                 typeof(HarmonyPatches), nameof(Vamp_ResolveApparelGraphics)), null);
 
-            //Log.Message("26");
+            Log.Message("10.6");
             harmony.Patch(AccessTools.Method(typeof(Scenario), "Notify_NewPawnGenerating"), null, new HarmonyMethod(
                 typeof(HarmonyPatches), nameof(Vamp_NewPawnGenerating)), null);
 
@@ -53,26 +54,26 @@ namespace Vampire
             //                    }), null, null,
             //                new HarmonyMethod(typeof(HarmonyPatches), nameof(RenderPawnInternalTranspiler)));
             //
-            //Log.Message("27");
+            Log.Message("10.7");
             harmony.Patch(
                 AccessTools.Method(typeof(PawnRenderer), "RenderPawnInternal",
 
                         new[]
                         {
-                            typeof(Vector3), typeof(float), typeof(bool), typeof(Rot4), typeof(Rot4), typeof(RotDrawMode),
-                            typeof(bool), typeof(bool), typeof(bool)
+                            typeof(Vector3), typeof(float), typeof(bool),
+                            typeof(Rot4), typeof(RotDrawMode), typeof(PawnRenderFlags)
                         }), new HarmonyMethod(typeof(HarmonyPatches),
                 nameof(RenderVampire)), null);
 
-            //Log.Message("27a");
+            Log.Message("10.8");
             //Vampires do not make breath motes
             harmony.Patch(AccessTools.Method(typeof(PawnBreathMoteMaker), "BreathMoteMakerTick"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_NoBreathingMote)), null);
 
-            //Log.Message("28");
+            Log.Message("10.9");
             harmony.Patch(AccessTools.Method(typeof(PawnGraphicSet), "MatsBodyBaseAt"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(Vamp_MatsBodyBaseAt)), null);
-            //Log.Message("29");
+            Log.Message("10.10");
         }
 
 
@@ -82,7 +83,7 @@ namespace Vampire
         //  typeof(Rot4), typeof(Rot4), typeof(RotDrawMode),
         //  typeof(bool), typeof(bool)
         public static bool RenderVampire(PawnRenderer __instance, Vector3 rootLoc, float angle, bool renderBody,
-            Rot4 bodyFacing, Rot4 headFacing, RotDrawMode bodyDrawType, bool portrait, bool headStump)
+            Rot4 bodyFacing, RotDrawMode bodyDrawType, PawnRenderFlags flags)
         {
             Quaternion quat = Quaternion.AngleAxis(angle, Vector3.up);
 
@@ -139,7 +140,7 @@ namespace Vampire
                     {
                         Vector3 loc = rootLoc;
                         loc.y += 0.0046875f;
-                        if (bodyDrawType == RotDrawMode.Dessicated && !p.RaceProps.Humanlike && __instance.graphics.dessicatedGraphic != null && !portrait)
+                        if (bodyDrawType == RotDrawMode.Dessicated && !p.RaceProps.Humanlike && __instance.graphics.dessicatedGraphic != null && flags != PawnRenderFlags.Portrait)
                         {
                             __instance.graphics.dessicatedGraphic.Draw(loc, bodyFacing, p);
                         }
@@ -151,26 +152,22 @@ namespace Vampire
                             {
                                 Material damagedMat = __instance.graphics.flasher.GetDamagedMat(list[i]);
                                 Vector3 scaleVector = new Vector3(loc.x, loc.y, loc.z);
-                                if (portrait)
+                                if (flags == PawnRenderFlags.Portrait && v.CurrentForm != null)
                                 {
-                                    scaleVector.x *= 1f + (1f - (portrait ?
-                                                                v.CurrentForm.bodyGraphicData.drawSize :
-                                                                v.CurrentForm.bodyGraphicData.drawSize)
-                                                            .x);
-                                    scaleVector.z *= 1f + (1f - (portrait ?
-                                                                    v.CurrentForm.bodyGraphicData.drawSize :
-                                                                    v.CurrentForm.bodyGraphicData.drawSize)
-                                                                .y);
+                                    scaleVector.x *= 1f + (1f - (v.CurrentForm.bodyGraphicData.drawSize).x);
+                                    scaleVector.z *= 1f + (1f - (v.CurrentForm.bodyGraphicData.drawSize).y);
                                 }
                                 else scaleVector = new Vector3(0, 0, 0);
-                                GenDraw.DrawMeshNowOrLater(mesh, loc + scaleVector, quat, damagedMat, portrait);
+                                GenDraw.DrawMeshNowOrLater(mesh, loc + scaleVector, quat, damagedMat, flags == PawnRenderFlags.Portrait);
                                 loc.y += 0.0046875f;
                             }
                             if (bodyDrawType == RotDrawMode.Fresh)
                             {
                                 Vector3 drawLoc = rootLoc;
                                 drawLoc.y += 0.01875f;
-                                Traverse.Create(__instance).Field("woundOverlays").GetValue<PawnWoundDrawer>().RenderOverBody(drawLoc, mesh, quat, portrait);
+                                
+                                Traverse.Create(__instance).Field("woundOverlays").GetValue<PawnWoundDrawer>().RenderOverBody(drawLoc, mesh, quat, flags == PawnRenderFlags.Portrait, BodyTypeDef.WoundLayer.Head, Verse.Rot4.Random, false);
+                                Traverse.Create(__instance).Field("woundOverlays").GetValue<PawnWoundDrawer>().RenderOverBody(drawLoc, mesh, quat, flags == PawnRenderFlags.Portrait, BodyTypeDef.WoundLayer.Body, Verse.Rot4.Random, false);
                             }
                         }
                     }

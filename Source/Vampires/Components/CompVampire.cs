@@ -43,6 +43,9 @@ namespace Vampire
         private int level = 0;
         private int xp = 0;
         private int abilityPoints = 0;
+        private bool isBeingDiablerieOn = false;
+        private string whoIsDoingDiablerieId = null;
+        private string whoAmIDoingDiablerieOnId = null;
         private TransformationDef currentForm = null;
         private SunlightPolicy curSunlightPolicy = SunlightPolicy.Restricted;
 
@@ -59,6 +62,33 @@ namespace Vampire
         #endregion Variables
 
         #region Access Properties
+
+        public bool getIsBeingDiablerieOn()
+        {
+            return isBeingDiablerieOn;
+        }
+        public void setIsBeingDiablerieOn(bool isBeingDiablerieOn)
+        {
+            this.isBeingDiablerieOn = isBeingDiablerieOn;
+        }
+
+        public string getWhoIsDoingDiablerieId()
+        {
+            return whoIsDoingDiablerieId;
+        }
+        public void setWhoIsDoingDiablerieId(string whoIsDoingDiablerieId)
+        {
+            this.whoIsDoingDiablerieId = whoIsDoingDiablerieId;
+        }
+
+        public string getWhoAmIDoingDiablerieOnId()
+        {
+            return whoAmIDoingDiablerieOnId;
+        }
+        public void setWhoAmIDoingDiablerieOnId(string whoAmIDoingDiablerieOnId)
+        {
+            this.whoAmIDoingDiablerieOnId = whoAmIDoingDiablerieOnId;
+        }
 
         public List<Pawn> Ghouls
         {
@@ -499,8 +529,38 @@ namespace Vampire
 
             Find.World.GetComponent<WorldComponent_VampireTracker>().AddVampire(AbilityUser, newSire, bloodline, generation, AbilityUser.ageTracker.AgeBiologicalYearsFloat);
         }
+        
+        public void reInitializeVampirismOnVampire(int newGeneration = -1, bool firstVampire = false)
+        {
+            AbilityUser.health.hediffSet.hediffs.RemoveAll(x => x is HediffVampirism_VampGiver);
+            AbilityUser.health.hediffSet.hediffs.RemoveAll(x => x.def == VampDefOf.ROM_Vampirism);
+            AbilityUser.health.hediffSet.hediffs.RemoveAll(x => x is Hediff_Addiction);
+            AbilityUser.health.hediffSet.hediffs.RemoveAll(x => x.def == AbilityUser.VampComp().Bloodline.fangsHediff);
+            AbilityUser.health.hediffSet.hediffs.RemoveAll(x => x.def == AbilityUser.VampComp().Bloodline.bloodlineHediff);
+            VampireGen.TryGiveVampirismHediff(AbilityUser, newGeneration, this.bloodline, this.sire, firstVampire);
+            if (firstVampire)
+            {
+                generation = 1;
+                bloodline = VampDefOf.ROMV_Caine;
+                sire = null;
+            }
+            generation = newGeneration; // + 1;
 
+            try
+            {
+                VampireGen.AddBloodlineHediff(AbilityUser);
+                VampireGen.AddFangsHediff(AbilityUser);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.ToString());
+            }
+            Notify_LevelUp(false);
+            if (generation < 3) 
+                this.curSunlightPolicy = SunlightPolicy.NoAI;
 
+            Find.World.GetComponent<WorldComponent_VampireTracker>().UpdateVampire(AbilityUser, this.sire, bloodline, generation, AbilityUser.ageTracker.AgeBiologicalYearsFloat);
+        }
 
         private bool vampirismTriedToBeInialized = false;
         public override void CompTick()

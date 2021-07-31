@@ -393,5 +393,37 @@ namespace Vampire
             //Log.Message("7");
 
         }
+        
+        public void UpdateVampire(Pawn pawn, Pawn sire, BloodlineDef bloodline, int generation, float? age)
+        {
+            try
+            {
+                string sireId = (generation == 1)
+                    ? ""
+                    : sire?.VampComp()?.Generation.ToString() + "_" + sire?.VampComp()?.Bloodline.ToString() + "_" +
+                      sire?.Name?.ToStringFull + "_" + sire?.gender.ToString();
+
+                //Make a temporary new record of the vampire.
+                var newRecord = new VampireRecord(pawn, generation, bloodline,
+                    age ?? new FloatRange(18f, 100f).RandomInRange, sireId, pawn.Faction);
+                //Log.Message("3");
+            
+                //Check to make sure the record doesn't already exist.
+                if (worldVampires?.Count > 0)
+                {
+                    if (worldVampires.FirstOrDefault(x => x.Key.Equals(newRecord)) is KeyValuePair<VampireRecord, Pawn> rec &&
+                        rec.Key is VampireRecord vampRec)
+                    {
+                        worldVampires[vampRec] = pawn;
+                        return;
+                    }   
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Message(e.ToString());
+            }
+            WorldVampiresCheck();
+        }
     }
 }

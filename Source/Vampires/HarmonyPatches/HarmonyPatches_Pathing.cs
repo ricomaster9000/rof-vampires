@@ -111,7 +111,7 @@ namespace Vampire
         }
 
         // RimWorld.PawnUtility
-        public static void KnownDangerAt_Vamp(IntVec3 c, Pawn forPawn, ref bool __result)
+        public static void KnownDangerAt_Vamp(IntVec3 c, Map map, Pawn forPawn, ref bool __result)
         {
             if (forPawn.IsVampire() && forPawn.MapHeld != null && forPawn.IsSunRisingOrDaylight() && !c.Roofed(forPawn.MapHeld))
             {

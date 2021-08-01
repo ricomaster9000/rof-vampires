@@ -25,8 +25,14 @@ namespace Vampire
         }
 
         // RimWorld.FoodUtility
-        public static bool TryFindBestBloodSourceFor(Pawn getter, Pawn eater, bool desperate, out Thing bloodSource, out ThingDef bloodDef, bool canUseInventory = true, bool allowForbidden = false)
+        public static bool TryFindBestBloodSourceFor(Pawn getter, Pawn eater, out Thing bloodSource, out ThingDef bloodDef, bool desperate = false, bool canUseInventory = true, bool allowForbidden = false)
         {
+            if (getter == null || eater == null)
+            {
+                bloodSource = null;
+                bloodDef = null;
+                return false;
+            }
             bool flag = getter.RaceProps.ToolUser && getter.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation);
             Thing thing = null;
             if (canUseInventory)

@@ -33,9 +33,44 @@ namespace Vampire
             harmony.Patch(AccessTools.Method(typeof(JobGiver_GetJoy), "TryGiveJob"),
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(INeverDrink___Juice)), null);
             //Log.Message("06");
+            harmony.Patch(AccessTools.Method(typeof(FoodUtility), "BestFoodSourceOnMap"),
+                new HarmonyMethod(typeof(HarmonyPatches), nameof(ROMV_BestFoodSourceOnMap)), null);
+            //Log.Message("06");
 
             //RimWorld 1.1 Patches
 
+        }
+        
+        public static bool ROMV_BestFoodSourceOnMap(
+            ref Thing __result,
+            Pawn getter,
+            Pawn eater,
+            bool desperate,
+            ThingDef foodDef,
+            FoodPreferability maxPref = FoodPreferability.MealLavish,
+            bool allowPlant = true,
+            bool allowDrug = true,
+            bool allowCorpse = true,
+            bool allowDispenserFull = true,
+            bool allowDispenserEmpty = true,
+            bool allowForbidden = false,
+            bool allowSociallyImproper = false,
+            bool allowHarvest = false,
+            bool forceScanWholeMap = false,
+            bool ignoreReservations = false,
+            bool calculateWantedStackCount = false,
+            FoodPreferability minPrefOverride = FoodPreferability.Undefined,
+            float? minNutrition = null)
+        {
+            if (getter != null && getter.IsVampire())
+            {
+                __result = null;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
 

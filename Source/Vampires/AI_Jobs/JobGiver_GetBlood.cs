@@ -64,6 +64,10 @@ namespace Vampire
 
         public static Job FeedJob(Pawn pawn)
         {
+            if (pawn == null || !pawn.IsVampire())
+            {
+                return null;
+            }
             Need_Blood blood = pawn.needs.TryGetNeed<Need_Blood>();
             if (blood == null)
             {
@@ -74,7 +78,7 @@ namespace Vampire
             bool isHuntLethal = blood.preferredFeedMode == PreferredFeedMode.HumanoidLethal || blood.preferredFeedMode == PreferredFeedMode.AnimalLethal;
             Thing thing;
             ThingDef def;
-            if (!BloodUtility.TryFindBestBloodSourceFor(pawn, pawn, desperate, out thing, out def))
+            if (!BloodUtility.TryFindBestBloodSourceFor(pawn, pawn, out thing, out def, desperate))
             {
                 return null;
             }
